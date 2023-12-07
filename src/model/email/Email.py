@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from src.model.common.Config import Config
+from src.model.email.SMTPFactory import SMTPFactory
 
 class Email():
 
@@ -13,8 +14,6 @@ class Email():
 
         self._file = config.get_str('GENERAL', 'FILE')
 
-        self._smtp_server = config.get_str('SMTP', 'SERVER')
-        self._smtp_port = config.get_int('SMTP', 'PORT')
         self._smtp_user = config.get_str('SMTP', 'USER')
         self._smtp_password = config.get_str('SMTP', 'PASSWORD')
 
@@ -41,7 +40,7 @@ class Email():
         return msg
 
     def send(self) -> None:
-        server = smtplib.SMTP_SSL(self._smtp_server, self._smtp_port)
+        server = SMTPFactory().get_smtp_server()
         server.login(self._smtp_user, self._smtp_password)
         text = self._compose_message().as_string()
         server.sendmail(self._email_from, self._email_to, text)
