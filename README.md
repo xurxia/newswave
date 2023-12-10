@@ -6,9 +6,9 @@ NewsWave is an RSS feed reader that searches for daily news and sends you by ema
 - [ ] Add a usage tutorial 
 - [ ] Catch and manage exceptions and errors
 - [ ] Use Jinja2 as template engine for render the output
-- [ ] Use the Factory pattern to instantiate SMTP connection
-- [ ] Add SSL and TSL support for SMTP
-- [ ] Use the Factory pattern to instantiate database connection
+- [X] Use the Factory pattern to instantiate SMTP connection
+- [X] Add SSL and TSL support for SMTP
+- [X] Use the Factory pattern to instantiate database connection
 - [ ] Add support for aditional databases (MySQL and Postgress)
 - [ ] Add a web interface to manage feeds
 - [ ] Filter links sent before
