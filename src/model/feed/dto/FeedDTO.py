@@ -1,9 +1,9 @@
 class FeedDTO():
 
     def __init__(self, id : int = 0, name : str = '', url : str = ''):
-        self._id = id
-        self._name = name
-        self._url = url
+        self._id : int = id
+        self._name : str = name
+        self._url : str = url
 
     def _get_id(self) -> int:
         return self._id

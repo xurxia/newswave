@@ -1,6 +1,9 @@
 import smtplib
+from typing import TypeAlias
 
 from src.model.common.Config import Config
+
+SMTPServer : TypeAlias = [smtplib.SMTP | smtplib.SMTP_SSL]
 
 class SMTPFactory():
 
@@ -11,12 +14,13 @@ class SMTPFactory():
 
     def __init__(self):
         if not hasattr(self, '_smtp_type'):
-            config = Config()
+            config : Config = Config()
             self._smtp_type: str = config.get_str('SMTP', 'TYPE')
             self._smtp_server: str = config.get_str('SMTP', 'SERVER')
             self._smtp_port: int = config.get_int('SMTP', 'PORT')
 
-    def get_smtp_server(self) -> [smtplib.SMTP | smtplib.SMTP_SSL]:
+    def get_smtp_server(self) -> SMTPServer:
+        instance : SMTPServer = None
         match self._smtp_type:
             case 'SSL':
                 instance = smtplib.SMTP_SSL(self._smtp_server, self._smtp_port)

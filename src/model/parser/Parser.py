@@ -9,26 +9,21 @@ class Parser():
     def __init__(self):
         config : Config = Config()
         self._file : str = config.get_str('GENERAL', 'FILE')
+        self._feed_facade : FeedFacade = FeedFacade()
 
-    def _get_feeds(self) -> dict:
-        facade : FeedFacade = FeedFacade()
-        sources : list[FeedDTO] = facade.get_feeds()
-        return sources
-    
-    def process(self) -> None:
-        date_min : datetime = datetime.now() + timedelta(days=-2)
+    def process(self, days : int = 2) -> None:
+        start_date : datetime = datetime.now() + timedelta(days=days)
         html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>'
-        sources : list[FeedDTO] = self._get_feeds()
-        for source in sources:
-            html += f'<H2>Fuente: {source.name}</H2>'
+        feeds : list[FeedDTO] = self._feed_facade.get_feeds()
+        for feed in feeds:
+            html += f'<H2>Fuente: {feed.name}</H2>'
             html += "<ul>"
-            entries = FeedFacade().get_entries(source)
+            entries = self._feed_facade.get_entries(feed)
             for entry in entries:
-                if entry.published > date_min:
+                if entry.published > start_date:
                     html += f'<li>{str(entry.published)} : <a href="{entry.link}">{entry.title}</a></li>'
             html += '</ul>'
         html += "</body></html>"
-
-        output = open(self._file, "w", encoding="utf-8")
-        output.write(html)
-        output.close()
+        with open(self._file, "w", encoding="utf-8") as output:
+            output.write(html)
+            output.close()
