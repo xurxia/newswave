@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add any other style sheets you want to customize the appearance -->
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .error-container {
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .error-container i {
+            font-size: 50px;
+            color: #333; /* Color más oscuro para un aspecto más sobrio */
+        }
+
+        .error-message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333; /* Color más oscuro para un aspecto más sobrio */
+        }
+
+        .back-button {
+            margin-top: 20px;
+            background-color: #333; /* Color más oscuro */
+            color: #fff; /* Texto en blanco */
+            border: none;
+            padding: 8px 12px; /* Tamaño ligeramente más pequeño */
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+            color: #fff; /* Color de la flecha en blanco */
+        }
+
+        .back-button:hover {
+            background-color: #555; /* Color más oscuro al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p class="error-message">Oops! Something went wrong.</p>
+        <center><button class="back-button" onclick="goBack"><i class="fas fa-arrow-left"></i> Go Back</button></center>
+    </div>
+
+    <!-- Add any other content or scripts as needed -->
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

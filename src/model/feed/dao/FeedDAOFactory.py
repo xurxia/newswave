@@ -1,10 +1,9 @@
 import importlib
+from types import ModuleType
 from typing import TypeAlias
 
 from src.model.common.Config import Config
 from src.model.feed.dao.FeedDAOInterface import FeedDAOInterface
-
-ModuleType : TypeAlias = importlib.ModuleType
 
 class FeedDAOFactory():
 

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Feeds</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add any other style sheets you want to customize the appearance -->
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        td button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        td button:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>RSS Feeds</h1>
+
+    <!-- Add Feed Button -->
+    <button class="add-feed-button" onclick="addFeed()"><i class="fas fa-plus"></i> Add Feed</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feed in feeds %}
+                <tr>
+                    <td>{{ feed.id }}</td>
+                    <td>{{ feed.name }}</td>
+                    <td>
+                        <button onclick="editFeed('{{ feed.id }}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button onclick="confirmDelete('{{ feed.id }}')"><i class="fas fa-trash-alt"></i> Delete</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Add any other content or scripts as needed -->
+
+    <script>
+        function editFeed(feedId) {
+            window.location.href = 'http://localhost:5000/edit/' + feedId;
+        }
+
+        function confirmDelete(feedId) {
+            var result = confirm("Are you sure you want to delete this feed?");
+            if (result) {
+                window.location.href = 'http://localhost:5000/delete/' + feedId;
+            }
+        }
+
+        function addFeed() {
+            window.location.href = 'http://localhost:5000/add';
+        }
+    </script>
+</body>
+</html>
