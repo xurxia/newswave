@@ -1,2 +1,2 @@
 feedparser==6.0.10
-certifi==2023.11.17
+flask==3.0.0
