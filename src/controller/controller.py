@@ -1,15 +1,28 @@
 from flask import Flask, render_template, redirect, url_for, request
-from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
 import os
+
+from src.controller.actions.Action import Action, Output
+from src.controller.actions.ListAction import ListAction
+from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
 
 template_folder_path = os.path.abspath('./src/view')
 app = Flask(__name__, template_folder=template_folder_path)
 
 # Ruta para la página de lista
+@app.route('/')
+def index():
+    return redirect(url_for('list_feeds'))
+
 @app.route('/list')
 def list_feeds():
-    feeds = FeedFacade().get_feeds()
-    return render_template('feed/list.html', feeds=feeds)
+    action : Action = ListAction()
+    output : Output = action.exec(request)
+    match output.status:
+        case 1:
+            output = render_template('feed/list.html', **output.vars)
+        case -1:
+            output = render_template('error/default.html')
+    return output
 
 @app.route('/add')
 def add_feed():
