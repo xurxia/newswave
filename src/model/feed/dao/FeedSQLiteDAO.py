@@ -14,7 +14,7 @@ class FeedSQLiteDAO(FeedDAOInterface):
         config : Config = Config()
         driver : str = config.get_str('DATABASE', 'TYPE')
         db_name : str  = config.get_str(driver, 'PATH')
-        self._connection : Connection = sqlite3.connect(db_name)
+        self._connection : Connection = sqlite3.connect(db_name, check_same_thread = False)
 
     def _execute_sql(self, sql :str, params : dict = {}) -> sqlite3.Cursor:
         cursor : Cursor = self._connection.cursor()

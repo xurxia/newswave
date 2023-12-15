@@ -3,6 +3,10 @@ import os
 
 from src.controller.actions.Action import Action, Output
 from src.controller.actions.ListAction import ListAction
+from src.controller.actions.CreateAction import CreateAction
+from src.controller.actions.EditAction import EditAction
+from src.controller.actions.UpdateAction import UpdateAction
+from src.controller.actions.DeleteAction import DeleteAction
 from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
 
 template_folder_path = os.path.abspath('./src/view')
@@ -30,28 +34,47 @@ def add_feed():
 
 @app.route('/create', methods=['POST'])
 def create_feed():
-    name = request.form.get('name')
-    url = request.form.get('url')
-    FeedFacade().create_feed(FeedDTO(0, name, url))
-    return redirect(url_for('list_feeds'))
+    action : Action = CreateAction()
+    output : Output = action.exec(request)
+    match output.status:
+        case 1:
+            output = redirect(url_for('list_feeds'))
+        case -1:
+            output = render_template('error/default.html')
+    return output
 
 @app.route('/edit/<id>')
 def edit_feed(id):
-    feed = FeedFacade().get_feed(id)
-    return render_template('feed/edit.html', feed=feed)
+    action : Action = EditAction()
+    output : Output = action.exec(request)
+    match output.status:
+        case 1:
+            output = render_template('feed/edit.html', **output.vars)
+        case -1:
+            output = render_template('error/default.html')
+    return output
 
 @app.route('/update', methods=['POST'])
 def update_feed():
-    id = request.form.get('id')   
-    name = request.form.get('name')
-    url = request.form.get('url')
-    FeedFacade().update_feed(FeedDTO(id, name, url))
-    return redirect(url_for('list_feeds'))
+    action : Action = UpdateAction()
+    output : Output = action.exec(request)
+    match output.status:
+        case 1:
+            output = redirect(url_for('list_feeds'))
+        case -1:
+            output = render_template('error/default.html')
+    return output
 
 @app.route('/delete/<id>')
-def del_feed(id):
-    FeedFacade().delete_feed(id)
-    return redirect(url_for('list_feeds'))
+def delete_feed(id):
+    action : Action = DeleteAction()
+    output : Output = action.exec(request)
+    match output.status:
+        case 1:
+            output = redirect(url_for('list_feeds'))
+        case -1:
+            output = render_template('error/default.html')
+    return output
 
 @app.route('/error')
 def show_error():
