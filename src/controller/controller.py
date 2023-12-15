@@ -7,7 +7,6 @@ from src.controller.actions.CreateAction import CreateAction
 from src.controller.actions.EditAction import EditAction
 from src.controller.actions.UpdateAction import UpdateAction
 from src.controller.actions.DeleteAction import DeleteAction
-from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
 
 template_folder_path = os.path.abspath('./src/view')
 app = Flask(__name__, template_folder=template_folder_path)
@@ -25,7 +24,7 @@ def list_feeds():
         case 1:
             output = render_template('feed/list.html', **output.vars)
         case -1:
-            output = render_template('error/default.html')
+            output = render_template('error/default.html', error=output.error)
     return output
 
 @app.route('/add')
@@ -40,7 +39,7 @@ def create_feed():
         case 1:
             output = redirect(url_for('list_feeds'))
         case -1:
-            output = render_template('error/default.html')
+            output = render_template('error/default.html', error=output.error)
     return output
 
 @app.route('/edit/<id>')
@@ -51,7 +50,7 @@ def edit_feed(id):
         case 1:
             output = render_template('feed/edit.html', **output.vars)
         case -1:
-            output = render_template('error/default.html')
+            output = render_template('error/default.html', error=output.error)
     return output
 
 @app.route('/update', methods=['POST'])
@@ -62,7 +61,7 @@ def update_feed():
         case 1:
             output = redirect(url_for('list_feeds'))
         case -1:
-            output = render_template('error/default.html')
+            output = render_template('error/default.html', error=output.error)
     return output
 
 @app.route('/delete/<id>')
@@ -73,10 +72,10 @@ def delete_feed(id):
         case 1:
             output = redirect(url_for('list_feeds'))
         case -1:
-            output = render_template('error/default.html')
+            output = render_template('error/default.html', error=output.error)
     return output
 
-@app.route('/error')
-def show_error():
-    return render_template('error/default.html')
-
+@app.errorhandler(404)
+def error_404(error : Exception):
+    output = render_template('error/default.html', error=error)
+    return output

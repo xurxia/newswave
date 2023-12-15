@@ -1,13 +1,19 @@
 from src.controller.actions.Action import Action, Output, request
 from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
+from src.model.exception.ModelException import ModelException
 
 class EditAction(Action):
 
     def exec(self, request : request) -> Output:
         output = Output()
         try:
-            output.vars["feed"] : FeedDTO = FeedFacade().get_feed(request.view_args.get("id"))
-            output.status = 1
+            id = request.view_args.get("id")
+            feed : FeedDTO = FeedFacade().get_feed(id)
+            if feed is not None:
+                output.vars["feed"] = feed
+                output.status = 1
+            else:
+                raise ModelException(f'Feed {id} does not exist')
         except Exception as e:
             output.error : Exception = e
             output.status = -1

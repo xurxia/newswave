@@ -1,4 +1,6 @@
-from configparser import ConfigParser
+from configparser import ConfigParser, NoSectionError, NoOptionError
+
+from src.model.exception.ModelException import ModelException
 
 class Config():
 
@@ -10,14 +12,37 @@ class Config():
     def __init__(self, file = './src/config/config.ini'):
         if not hasattr(self, '_config'):
             self._config =  ConfigParser()
-            self._config.read(file)
+            try:
+                self._config.read(file)
+            except Exception as e:
+                raise ModelException(f'Error reading config file: {file}')
     
     def get_str(self, section : str, parameter : str) -> str | None:
-        return self._config.get(section, parameter)
+        try:
+            return self._config.get(section, parameter)
+        except NoSectionError as e:
+            raise ModelException(f'Error getting section {section}')
+        except NoOptionError as e:
+            raise ModelException(f'Error getting parameter {parameter} from section {section}')
+        except Exception as e:
+            raise ModelException('Error accesing a parameter from config file')
     
     def get_int(self, section : str, parameter : str) -> int | None:
-        return self._config.getint(section, parameter)
+        try:
+            return self._config.getint(section, parameter)
+        except NoSectionError as e:
+            raise ModelException(f'Error getting section {section}')
+        except NoOptionError as e:
+            raise ModelException(f'Error getting parameter {parameter} from section {section}')
+        except Exception as e:
+            raise ModelException('Error accesing a parameter from config file')
     
     def get_float(self, section : str, parameter : str) -> float | None:
-        return self._config.getfloat(section, parameter)
-    
+        try:
+            return self._config.getfloat(section, parameter)
+        except NoSectionError as e:
+            raise ModelException(f'Error getting section {section}')
+        except NoOptionError as e:
+            raise ModelException(f'Error getting parameter {parameter} from section {section}')
+        except Exception as e:
+            raise ModelException('Error accesing a parameter from config file')

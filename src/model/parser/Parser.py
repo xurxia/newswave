@@ -12,7 +12,7 @@ class Parser():
         self._feed_facade : FeedFacade = FeedFacade()
 
     def process(self, days : int = 2) -> None:
-        start_date : datetime = datetime.now() + timedelta(days=days)
+        start_date : datetime = datetime.now() - timedelta(days=days)
         html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>'
         feeds : list[FeedDTO] = self._feed_facade.get_feeds()
         for feed in feeds:
