@@ -54,3 +54,11 @@ Automate the execution using Task Scheduler in Windows or Cron in Linux.
 - [X] Utilize the Factory pattern to instantiate SMTP connections
 - [X] Incorporate SSL and TSL support for SMTP
 - [X] Implement the Factory pattern for instantiating database connections
+
+## Contact
+For further information or inquiries, feel free to reach out via Mastodon, Matrix or Email:
+
+🐘 [Mastodon](https://astrodon.social/@xurxia)<br>
+💬 [Matrix](https://matrix.to/#/@xurxia:matrix.tchncs.de)<br>
+✉️ [Email](info@xurxia.net)<br>
+
