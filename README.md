@@ -43,6 +43,27 @@ python server.py
 
 Automate the execution using Task Scheduler in Windows or Cron in Linux.
 
+## Installing and Dependencies
+
+NewsWave requiere Python3.10+ to works. Also, *Feedparser* and *Flask* are required too.
+
+### Installing with VirtualEnv
+
+```bash
+git clone https://github.com/xurxia/newswave.git
+python -m venv newswave
+cd newswave
+source bin/activate
+pip install -r requirements.txt
+```
+
+### Installing without VirtualEnv
+
+```bash
+git clone https://github.com/xurxia/newswave.git
+cd newswave
+pip install -r requirements.txt
+```
 ## To-Do List
 
 - [ ] Implement Jinja2 as the template engine for rendering the output
