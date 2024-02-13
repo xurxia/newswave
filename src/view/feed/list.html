@@ -75,18 +75,18 @@
 
     <script>
         function editFeed(feedId) {
-            window.location.href = 'http://localhost:5000/edit/' + feedId;
+            window.location.href = '/edit/' + feedId;
         }
 
         function confirmDelete(feedId) {
             var result = confirm("Are you sure you want to delete this feed?");
             if (result) {
-                window.location.href = 'http://localhost:5000/delete/' + feedId;
+                window.location.href = '/delete/' + feedId;
             }
         }
 
         function addFeed() {
-            window.location.href = 'http://localhost:5000/add';
+            window.location.href = '/add';
         }
     </script>
 </body>

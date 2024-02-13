@@ -6,7 +6,7 @@ if __name__ == '__main__':
     try:
         config = Config()
         port = config.get_int('SERVER', 'PORT')
-        app.run(debug=True, port=port)
+        app.run(host='0.0.0.0', debug=True, port=port)
     except ModelException as e:
         raise ModelException('Error reading server config: '+e)
     except Exception as e:

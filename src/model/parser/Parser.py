@@ -16,6 +16,7 @@ class Parser():
         html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>'
         feeds : list[FeedDTO] = self._feed_facade.get_feeds()
         for feed in feeds:
+            print(f'Source: {feed.name}')
             html += f'<H2>Fuente: {feed.name}</H2>'
             html += "<ul>"
             entries = self._feed_facade.get_entries(feed)
