@@ -57,6 +57,6 @@ class FeedFacade():
                 link : str = ((entry['link']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
                 published : datetime = datetime.fromtimestamp(mktime(entry['published_parsed']))
                 entries.append(EntryDTO(title, link, published))
-        except ModelException as e:
+        except Exception as e:
             raise ModelException(f'Error getting entries from {feed.name} feed: '+e.message)
         return entries
