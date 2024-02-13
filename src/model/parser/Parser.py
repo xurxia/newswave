@@ -27,7 +27,7 @@ class Parser():
                         html_tmp += f'<li>{str(entry.published)} : <a href="{entry.link}">{entry.title}</a></li>'
                 html_tmp += '</ul>'
             except ModelException as e:
-                print(f'Error: {e.message}')
+                print(f'Error parsing feed {feed.name}: {e}')
             else:
                 html += html_tmp
         html += "</body></html>"
