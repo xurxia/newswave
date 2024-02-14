@@ -1,6 +1,7 @@
 import feedparser
 from datetime import datetime
 from time import mktime
+from typing import Union
 
 from src.model.feed.dao.FeedDAOFactory import FeedDAOFactory
 from src.model.feed.dao.FeedDAOInterface import FeedDAOInterface
@@ -18,7 +19,7 @@ class FeedFacade():
             raise ModelException(f'Error creating feed: '+e.message)
         return id
     
-    def get_feed(self, id : int) -> [FeedDTO | None]:
+    def get_feed(self, id : int) -> Union[FeedDTO | None]:
         try:
             dao : FeedDAOInterface = FeedDAOFactory().get_feed_dao()
             feed : FeedDTO = dao.get_feed(id)
@@ -53,10 +54,21 @@ class FeedFacade():
             entries : list[EntryDTO] = []
             parsed : dict = feedparser.parse(feed.url)
             for entry in parsed['entries']:
+                author : str
+                summary : str
+                tags : list[str] = []
                 title : str =((entry['title']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
                 link : str = ((entry['link']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
                 published : datetime = datetime.fromtimestamp(mktime(entry['published_parsed']))
-                entries.append(EntryDTO(title, link, published))
+                if ((author := entry.get('author')) is not None):
+                    author = (author.encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
+                if ((summary := entry.get('summary')) is not None):
+                    summary = (summary.encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
+                if ((tags_tmp := entry.get('tags')) is not None):
+                    for tag in tags_tmp:
+                        if(tag.term is not None):
+                            tags.append(tag.term)
+                entries.append(EntryDTO(title, link, published, author, summary, tags))
         except Exception as e:
             raise ModelException(f'Error getting entries from {feed.name} feed: {e}')
         return entries
