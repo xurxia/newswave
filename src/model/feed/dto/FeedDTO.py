@@ -1,9 +1,10 @@
 class FeedDTO():
 
-    def __init__(self, id : int = 0, name : str = '', url : str = ''):
+    def __init__(self, id : int = 0, name : str = '', url : str = '', etag : str = ''):
         self._id : int = id
         self._name : str = name
         self._url : str = url
+        self._etag : str = etag
 
     def _get_id(self) -> int:
         return self._id
@@ -26,5 +27,11 @@ class FeedDTO():
 
     url = property(_get_url, _set_url, None)
 
+    def _get_etag(self) -> str:
+        return self._etag
+    
+    def _set_etag(self, etag : str) -> None:
+        self._etag = etag
 
+    etag = property(_get_etag, _set_etag, None)
     
