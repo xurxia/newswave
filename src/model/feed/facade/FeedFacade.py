@@ -59,12 +59,18 @@ class FeedFacade():
                 feed.modified = modified
             self.update_feed(feed)
             for entry in parsed['entries']:
+                published : datetime
                 author : str
                 summary : str
                 tags : list[str] = []
                 title : str =((entry['title']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
                 link : str = ((entry['link']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
-                published : datetime = datetime.fromtimestamp(mktime(entry['published_parsed']))
+                if ((published := entry.get('published_parsed')) is not None):
+                    published = datetime.fromtimestamp(mktime(published))
+                elif ((published := entry.get('updated_parsed')) is not None):
+                    published = datetime.fromtimestamp(mktime(published))
+                else:
+                    published = 0
                 if ((author := entry.get('author')) is not None):
                     author = (author.encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
                 if ((summary := entry.get('summary')) is not None):
