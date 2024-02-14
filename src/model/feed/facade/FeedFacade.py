@@ -52,10 +52,12 @@ class FeedFacade():
     def get_entries(self, feed : FeedDTO) -> list[EntryDTO]:
         try:
             entries : list[EntryDTO] = []
-            parsed : dict = feedparser.parse(feed.url, etag=feed.etag)
+            parsed : dict = feedparser.parse(feed.url, etag=feed.etag, modified=feed.modified)
             if((etag := parsed.get('etag')) is not None):
                 feed.etag = etag
-                self.update_feed(feed)
+            if((modified := parsed.get('modified')) is not None):
+                feed.modified = modified
+            self.update_feed(feed)
             for entry in parsed['entries']:
                 author : str
                 summary : str
