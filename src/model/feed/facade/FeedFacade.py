@@ -53,10 +53,10 @@ class FeedFacade():
         try:
             entries : list[EntryDTO] = []
             parsed : dict = feedparser.parse(feed.url, etag=feed.etag, modified=feed.modified)
-            if((etag := parsed.get('etag')) is not None):
-                feed.etag = etag
-            if((modified := parsed.get('modified')) is not None):
-                feed.modified = modified
+            feed.etag = parsed.get('etag', '')
+            feed.modified = parsed.get('modified', '')
+            if((updated := parsed.feed.get('updated_parsed')) is not None):
+                feed.updated = str(datetime(*updated[:6]))
             self.update_feed(feed)
             for entry in parsed['entries']:
                 published : datetime

@@ -1,11 +1,12 @@
 class FeedDTO():
 
-    def __init__(self, id : int = 0, name : str = '', url : str = '', etag : str = '', modified : str = ''):
+    def __init__(self, id : int = 0, name : str = '', url : str = '', etag : str = '', modified : str = '', updated : str = ''):
         self._id : int = id
         self._name : str = name
         self._url : str = url
         self._etag : str = etag
         self._modified : str = modified
+        self._updated : str = updated
 
     def _get_id(self) -> int:
         return self._id
@@ -43,3 +44,11 @@ class FeedDTO():
         self._modified = modified
 
     modified = property(_get_modified, _set_modified, None)
+
+    def _get_updated(self) -> str:
+        return self._updated
+    
+    def _set_updated(self, updated : str) -> None:
+        self._updated = updated
+
+    updated = property(_get_updated, _set_updated, None)

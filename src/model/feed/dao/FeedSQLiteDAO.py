@@ -38,8 +38,8 @@ class FeedSQLiteDAO(FeedDAOInterface):
         
     def create_feed(self, feed : FeedDTO) -> int:
         try:
-            sql : str = f'INSERT INTO SOURCE (NAME, URL, ETAG, MODIFIED) VALUES (:name, :url, :etag, :modified)'
-            params : dict = {'name': feed.name, 'url': feed.url, 'etag': '', 'modified': ''}
+            sql : str = f'INSERT INTO SOURCE (NAME, URL, ETAG, MODIFIED, UPDATED) VALUES (:name, :url, :etag, :modified, :updated)'
+            params : dict = {'name': feed.name, 'url': feed.url, 'etag': '', 'modified': '', 'updated': ''}
             cursor = self._execute_sql(sql, params)
             if cursor.rowcount == 1:
                 self._commit()
@@ -54,13 +54,13 @@ class FeedSQLiteDAO(FeedDAOInterface):
            
     def get_feed(self, id : int) -> FeedDTO:
         try:
-            sql : str = f'SELECT ID, NAME, URL, ETAG, MODIFIED FROM SOURCE WHERE ID=:id'
+            sql : str = f'SELECT ID, NAME, URL, ETAG, MODIFIED, UPDATED FROM SOURCE WHERE ID=:id'
             params : dict = {'id': id}
             cursor : Cursor = self._execute_sql(sql, params)
             row : Row = cursor.fetchone()
             feed : FeedDTO = None
             if row is not None:
-                feed = FeedDTO(row[0], row[1], row[2], row[3], row[4])
+                feed = FeedDTO(row[0], row[1], row[2], row[3], row[4], row[5])
         except ModelException as e:
             raise ModelException(f'Error getting feed at SQLite3 database: '+e.message)
         except Exception as e:
@@ -69,12 +69,12 @@ class FeedSQLiteDAO(FeedDAOInterface):
     
     def get_feeds(self) -> list[FeedDTO]:
         try:
-            sql : str = f'SELECT ID, NAME, URL, ETAG, MODIFIED FROM SOURCE'
+            sql : str = f'SELECT ID, NAME, URL, ETAG, MODIFIED, UPDATED FROM SOURCE'
             cursor : Cursor = self._execute_sql(sql)
             rows : list[Row] = cursor.fetchall()
             feeds : list[FeedDTO] = []
             for row in rows:
-                feed : FeedDTO = FeedDTO(row[0], row[1], row[2], row[3], row[4])
+                feed : FeedDTO = FeedDTO(row[0], row[1], row[2], row[3], row[4], row[5])
                 feeds.append(feed)
         except ModelException as e:
             raise ModelException(f'Error getting feeds at SQLite3 database: '+e.message)
@@ -84,8 +84,8 @@ class FeedSQLiteDAO(FeedDAOInterface):
        
     def update_feed(self, feed : FeedDTO) -> None:
         try:
-            sql : str = f'UPDATE SOURCE SET NAME=:name, URL=:url, ETAG=:etag, MODIFIED=:modified WHERE ID=:id'
-            params : dict = {'id': feed.id, 'name': feed.name, 'url': feed.url, 'etag': feed.etag, 'modified': feed.modified}
+            sql : str = f'UPDATE SOURCE SET NAME=:name, URL=:url, ETAG=:etag, MODIFIED=:modified, UPDATED=:updated WHERE ID=:id'
+            params : dict = {'id': feed.id, 'name': feed.name, 'url': feed.url, 'etag': feed.etag, 'modified': feed.modified, 'updated': feed.updated}
             cursor : Cursor = self._execute_sql(sql, params)
             if cursor.rowcount == 1:
                 self._commit()

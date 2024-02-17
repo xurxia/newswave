@@ -12,10 +12,13 @@ class Parser():
         self._feed_facade : FeedFacade = FeedFacade()
 
     def process(self, days : int = 2) -> None:
-        start_date : datetime = datetime.now() - timedelta(days=days)
         html = '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body>'
         feeds : list[FeedDTO] = self._feed_facade.get_feeds()
         for feed in feeds:
+            if(feed.updated != ''):
+                start_date : datetime = datetime.strptime(feed.updated, '%Y-%m-%d %H:%M:%S')
+            else:
+                start_date : datetime = datetime.now() - timedelta(days=days)
             html_tmp = ''
             try:
                 print(f'Source: {feed.name}')
