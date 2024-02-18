@@ -57,6 +57,8 @@ class FeedFacade():
             feed.modified = parsed.get('modified', '')
             if((updated := parsed.feed.get('updated_parsed')) is not None):
                 feed.updated = str(datetime(*updated[:6]))
+            elif len(parsed.get('entries', [])) > 0:
+                feed.updated = str(datetime(*parsed.entries[0].published_parsed[:6]))
             self.update_feed(feed)
             for entry in parsed['entries']:
                 published : datetime

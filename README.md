@@ -66,9 +66,10 @@ pip install -r requirements.txt
 ```
 ## To-Do List
 
+- [ ] Add categories to sort and join feeds
 - [ ] Implement Jinja2 as the template engine for rendering the output
 - [ ] Add support for additional databases (MySQL and Postgres)
-- [ ] Implement link filtering before sending
+- [X] Implement link filtering before sending
 - [X] Develop a usage tutorial (Work in Progress)
 - [X] Capture and manage exceptions and errors
 - [X] Integrate a web interface for feed management
@@ -82,4 +83,3 @@ For further information or inquiries, feel free to reach out via Mastodon, Matri
 🐘 [Mastodon](https://astrodon.social/@xurxia)<br>
 💬 [Matrix](https://matrix.to/#/@xurxia:matrix.tchncs.de)<br>
 ✉️ [Email](info@xurxia.net)<br>
-
