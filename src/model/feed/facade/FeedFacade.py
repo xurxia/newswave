@@ -1,5 +1,5 @@
 import feedparser
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import mktime
 from typing import Union
 
@@ -49,39 +49,61 @@ class FeedFacade():
         except ModelException as e:
             raise ModelException(f'Error deleting feed: '+e.message)
     
-    def get_entries(self, feed : FeedDTO) -> list[EntryDTO]:
+    def _process_entry(self, entry : EntryDTO, encoding : str, start_date : datetime) -> Union[EntryDTO, None]:
+        published : datetime
+        author : str
+        summary : str
+        tags : list[str] = []
+        title : str =((entry['title']).encode(encoding=encoding, errors="ignore")).decode("utf-8")
+        link : str = ((entry['link']).encode(encoding=encoding, errors="ignore")).decode("utf-8")
+        if ((published := entry.get('published_parsed')) is not None):
+            published = datetime.fromtimestamp(mktime(published))
+        elif ((published := entry.get('updated_parsed')) is not None):
+            published = datetime.fromtimestamp(mktime(published))
+        else:
+            published = 0
+        if ((author := entry.get('author')) is not None):
+            author = (author.encode(encoding=encoding, errors="ignore")).decode("utf-8")
+        if ((summary := entry.get('summary')) is not None):
+            summary = (summary.encode(encoding=encoding, errors="ignore")).decode("utf-8")
+        if ((tags_tmp := entry.get('tags')) is not None):
+            for tag in tags_tmp:
+                if(tag.term is not None):
+                    tags.append(tag.term)
+        if published > start_date:
+            return EntryDTO(title, link, published, author, summary, tags)
+        else:
+            return None
+
+    def _get_start_date(self, feed : FeedDTO, days : int) -> datetime:
+        if(feed.updated != ''):
+            start_date : datetime = datetime.strptime(feed.updated, '%Y-%m-%d %H:%M:%S')
+        else:
+            start_date : datetime = datetime.now() - timedelta(days=days)
+        return start_date
+
+    def _get_updated(self, parsed : dict) -> str:
+        updated : str = ''
+        if((updated := parsed.feed.get('updated_parsed')) is not None):
+            updated = str(datetime(*updated[:6]))
+        elif len(parsed.get('entries', [])) > 0:
+            updated = str(datetime(*parsed.entries[0].published_parsed[:6]))
+        return updated
+    
+    def get_entries(self, feed : FeedDTO, days : int = 2) -> list[EntryDTO]:
         try:
             entries : list[EntryDTO] = []
             parsed : dict = feedparser.parse(feed.url, etag=feed.etag, modified=feed.modified)
+            start_date : datetime = self._get_start_date(feed, days)
             feed.etag = parsed.get('etag', '')
             feed.modified = parsed.get('modified', '')
-            if((updated := parsed.feed.get('updated_parsed')) is not None):
-                feed.updated = str(datetime(*updated[:6]))
-            elif len(parsed.get('entries', [])) > 0:
-                feed.updated = str(datetime(*parsed.entries[0].published_parsed[:6]))
+            if((updated := self._get_updated(parsed)) != ''):
+                feed.updated = updated
             self.update_feed(feed)
             for entry in parsed['entries']:
-                published : datetime
-                author : str
-                summary : str
-                tags : list[str] = []
-                title : str =((entry['title']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
-                link : str = ((entry['link']).encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
-                if ((published := entry.get('published_parsed')) is not None):
-                    published = datetime.fromtimestamp(mktime(published))
-                elif ((published := entry.get('updated_parsed')) is not None):
-                    published = datetime.fromtimestamp(mktime(published))
-                else:
-                    published = 0
-                if ((author := entry.get('author')) is not None):
-                    author = (author.encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
-                if ((summary := entry.get('summary')) is not None):
-                    summary = (summary.encode(encoding=parsed['encoding'], errors="ignore")).decode("utf-8")
-                if ((tags_tmp := entry.get('tags')) is not None):
-                    for tag in tags_tmp:
-                        if(tag.term is not None):
-                            tags.append(tag.term)
-                entries.append(EntryDTO(title, link, published, author, summary, tags))
+                encoding : str = parsed['encoding']
+                if((processed := self._process_entry(entry, encoding, start_date)) != None):
+                    entries.append(processed)
         except Exception as e:
             raise ModelException(f'Error getting entries from {feed.name} feed: {e}')
         return entries
