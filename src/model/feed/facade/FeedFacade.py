@@ -84,8 +84,8 @@ class FeedFacade():
 
     def _get_updated(self, parsed : dict) -> str:
         updated : str = ''
-        if((updated := parsed.feed.get('updated_parsed')) is not None):
-            updated = str(datetime(*updated[:6]))
+        if(parsed.feed.get('updated_parsed') is not None):
+            updated = str(datetime(*parsed.feed.updated_parsed[:6]))
         elif len(parsed.get('entries', [])) > 0:
             updated = str(datetime(*parsed.entries[0].published_parsed[:6]))
         return updated
