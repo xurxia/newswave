@@ -7,16 +7,17 @@ from src.controller.actions.CreateAction import CreateAction
 from src.controller.actions.EditAction import EditAction
 from src.controller.actions.UpdateAction import UpdateAction
 from src.controller.actions.DeleteAction import DeleteAction
+from src.controller.actions.ParseAction import ParseAction
 
 template_folder_path = os.path.abspath('./src/view')
 app = Flask(__name__, template_folder=template_folder_path)
 
 # Ruta para la página de lista
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return redirect(url_for('list_feeds'))
 
-@app.route('/list')
+@app.route('/list', methods=['GET'])
 def list_feeds():
     action : Action = ListAction()
     output : Output = action.exec(request)
@@ -27,7 +28,7 @@ def list_feeds():
             output = render_template('error/default.html', error=output.error)
     return output
 
-@app.route('/add')
+@app.route('/add', methods=['GET'])
 def add_feed():
     return render_template('feed/add.html')
 
@@ -42,7 +43,7 @@ def create_feed():
             output = render_template('error/default.html', error=output.error)
     return output
 
-@app.route('/edit/<id>')
+@app.route('/edit/<id>', methods=['GET'])
 def edit_feed(id):
     action : Action = EditAction()
     output : Output = action.exec(request)
@@ -64,13 +65,24 @@ def update_feed():
             output = render_template('error/default.html', error=output.error)
     return output
 
-@app.route('/delete/<id>')
+@app.route('/delete/<id>', methods=['GET'])
 def delete_feed(id):
     action : Action = DeleteAction()
     output : Output = action.exec(request)
     match output.status:
         case 1:
             output = redirect(url_for('list_feeds'))
+        case -1:
+            output = render_template('error/default.html', error=output.error)
+    return output
+
+@app.route('/parse', methods=['GET'])
+def parse_feed():
+    action : Action = ParseAction()
+    output : Output = action.exec(request)
+    match output.status:
+        case 1:
+            output = render_template('parser/resume.html', **output.vars)
         case -1:
             output = render_template('error/default.html', error=output.error)
     return output

@@ -1,9 +1,9 @@
-from src.controller.actions.Action import Action, Output, request
+from src.controller.actions.Action import Action, Output, Request
 from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
 
 class DeleteAction(Action):
 
-    def exec(self, request : request) -> Output:
+    def exec(self, request : Request) -> Output:
         output = Output()
         try:
             _ = FeedFacade().delete_feed(request.view_args.get("id"))

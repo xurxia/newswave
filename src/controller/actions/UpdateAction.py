@@ -1,9 +1,9 @@
-from src.controller.actions.Action import Action, Output, request
+from src.controller.actions.Action import Action, Output, Request
 from src.model.feed.facade.FeedFacade import FeedFacade, FeedDTO
 
 class UpdateAction(Action):
 
-    def exec(self, request : request) -> Output:
+    def exec(self, request : Request) -> Output:
         output = Output()
         try:
             feed : FeedDTO = FeedDTO(**request.form)
