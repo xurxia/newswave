@@ -42,7 +42,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <h1 class="text-center mb-5">RSS Feeds</h1>
         {% for feed in feeds %}
         {% if feed.entries %}
@@ -56,17 +56,21 @@
                 <div id="feed-collapse-{{ feed.id }}" class="accordion-collapse collapse show" aria-labelledby="feed-heading-{{ feed.id }}">
                     <div class="accordion-body">
                         {% for entry in feed.entries %}
-                        <div class="entry">
-                            <h3 class="entry-title">{{ entry.title }}</h3>
-                            <div class="entry-meta">
-                                <i class="far fa-calendar-alt"></i>{{ entry.published }} |
-                                <i class="far fa-user"></i>{{ entry.author }} |
-                                <i class="far fa-tags"></i>{% for tag in entry.tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2"> <!-- Adjust this as per your design -->
+                                <div class="entry">
+                                    <h3 class="entry-title">{{ entry.title }}</h3>
+                                    <div class="entry-meta">
+                                        <i class="far fa-calendar-alt"></i>{{ entry.published }} |
+                                        <i class="far fa-user"></i>{{ entry.author }} |
+                                        <i class="far fa-tags"></i>{% for tag in entry.tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}
+                                    </div>
+                                    <div class="entry-summary">
+                                        {{ entry.summary|safe }}
+                                    </div>
+                                    <a href="{{ entry.link }}" class="btn btn-primary">Read more</a>
+                                </div>
                             </div>
-                            <div class="entry-summary">
-                                {{ entry.summary|safe }}
-                            </div>
-                            <a href="{{ entry.link }}" class="btn btn-primary">Read more</a>
                         </div>
                         {% endfor %}
                     </div>
