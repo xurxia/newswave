@@ -6,5 +6,5 @@ if __name__ == '__main__':
     parser : Parser = Parser()
     email : Email = Email()
     
-    parser.process()
-    email.send()
+    html : str = parser.process()
+    email.send(html)

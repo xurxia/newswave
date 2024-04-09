@@ -29,7 +29,7 @@ class Email():
 
     def _get_attachment(self) -> MIMEBase:
         try:
-            attachment = open(self._file, "rb")        
+            attachment = open(self._file, "rb")       
             part : MIMEBase = MIMEBase('application', 'octet-stream')
             part.set_payload((attachment).read())
             encoders.encode_base64(part)
@@ -43,25 +43,26 @@ class Email():
         except Exception as e:
             raise ModelException('Unknow error getting attached file to email')
 
-    def _compose_message(self) -> MIMEMultipart:
+    def _compose_message(self, html : str) -> MIMEMultipart:
         try:
             msg : MIMEMultipart     = MIMEMultipart()
             msg['From'] = self._email_from
             msg['To'] = self._email_to
             msg['Subject'] = self._email_subject
-            msg.attach(self._get_attachment())
+            html_part = MIMEText(html, 'html')
+            msg.attach(html_part)
             return msg
         except MessageError as e:
             raise ModelException(f'Error composing email')
         except Exception as e:
             raise ModelException('Unknow error composing email')
 
-    def send(self) -> None:
+    def send(self, html : str) -> None:
         try:
             server : SMTPServer = SMTPFactory().get_smtp_server()
             server.login(self._smtp_user, self._smtp_password)
-            text : str = self._compose_message().as_string()
-            server.sendmail(self._email_from, self._email_to, text)
+            msg = self._compose_message(html)
+            server.send_message(msg)
             server.quit()
         except MessageError as e:
             raise ModelException(f'Error sending email')

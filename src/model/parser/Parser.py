@@ -9,7 +9,7 @@ class Parser():
         self._file : str = config.get_str('GENERAL', 'FILE')
         self._feed_facade : FeedFacade = FeedFacade()
 
-    def process(self, days : int = 2) -> None:
+    def process(self, days : int = 2) -> str:
         env = Environment(loader=FileSystemLoader('./src/view'))
         template = env.get_template('parser/resume.html')
         feeds : list[FeedDTO] = self._feed_facade.get_feeds()
@@ -20,6 +20,4 @@ class Parser():
             except ModelException as e:
                 print(f'Error parsing feed {feed.name}: {e}' )
         html : str = template.render(feeds=feeds)
-        with open(self._file, "w", encoding="utf-8") as output:
-            output.write(html)
-            output.close()
+        return html
