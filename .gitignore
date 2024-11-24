@@ -3,6 +3,7 @@ output.html
 config.dev
 lib64
 src/database/feedsdev.db
+src/config/configdev.ini
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

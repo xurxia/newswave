@@ -3,88 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>RSS Feeds</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        /* Custom styles */
+    <style type="text/css">
+        /* Reset styles for email clients */
+        body, table, td, div, p, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             color: #343a40;
-            padding-top: 50px;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0;
+            padding: 0;
         }
-        image {
-            max-width: 100%;
-            height: auto;
-        }
-        .feed-container {
-            margin-bottom: 30px;
-        }
-        .entry {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        /* Container styles */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
             padding: 20px;
+        }
+
+        /* Feed section styles */
+        .feed-section {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Image styles */
+        .entry img {
+            display: block;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            margin: 10px 0;
+        }
+
+        /* Entry styles */
+        .entry {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
             margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
         }
-        .entry-title {
-            margin-bottom: 10px;
+
+        /* CSS-only accordion styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .accordion-header {
+            display: block;
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 15px 40px 15px 15px;
+            margin: 0;
+            cursor: pointer;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            position: relative;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .accordion-header h2 {
+            margin: 0;
+            padding: 0;
+            color: #444444;
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+        }
+
+        .accordion-header:after {
+            content: "▼";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Use hidden checkbox for toggle functionality */
+        .toggle-input {
+            display: none;
+        }
+
+        .toggle-input:checked + .accordion-header:after {
+            content: "▲";
+        }
+
+        .toggle-input:checked ~ .accordion-content {
+            max-height: 2000px;
+        }
+
+        /* Typography */
+        h1 {
+            color: #333333;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        h3 {
             color: #007bff;
+            font-size: 18px;
+            margin: 10px 0;
         }
+
+        /* Meta information */
         .entry-meta {
-            margin-bottom: 10px;
             color: #6c757d;
+            font-size: 14px;
+            margin: 10px 0;
         }
-        .entry-meta i {
-            margin-right: 5px;
+
+        /* Button styles */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        /* Table styles */
+        .main-table {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 600px) {
+            .email-container,
+            .feed-section {
+                padding: 10px !important;
+            }
+            
+            .entry {
+                padding: 15px !important;
+            }
+            
+            h1 {
+                font-size: 20px !important;
+            }
+            
+            .accordion-header h2 {
+                font-size: 18px !important;
+            }
+            
+            h3 {
+                font-size: 16px !important;
+            }
+
+            .accordion-header {
+                padding: 12px 35px 12px 12px !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <h1 class="text-center mb-5">RSS Feeds</h1>
-        {% for feed in feeds %}
-        {% if feed.entries %}
-        <div class="accordion feed-container" id="feed-{{ feed.id }}">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="feed-heading-{{ feed.id }}">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#feed-collapse-{{ feed.id }}" aria-expanded="true" aria-controls="feed-collapse-{{ feed.id }}">
-                        {{ feed.name }}
-                    </button>
-                </h2>
-                <div id="feed-collapse-{{ feed.id }}" class="accordion-collapse collapse show" aria-labelledby="feed-heading-{{ feed.id }}">
-                    <div class="accordion-body">
-                        {% for entry in feed.entries %}
-                        <div class="row">
-                            <div class="col-md-8 offset-md-2"> <!-- Adjust this as per your design -->
-                                <div class="entry">
-                                    <div class="row">
-                                        <div class="col-md-8"> <!-- Adjust this as per your design -->
-                                            <h3 class="entry-title">{{ entry.title }}</h3>
-                                            <div class="entry-meta">
-                                                <i class="far fa-calendar-alt"></i>{{ entry.published }} |
-                                                <i class="far fa-user"></i>{{ entry.author }} |
-                                                <i class="far fa-tags"></i>{% for tag in entry.tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}
-                                            </div>
-                                            <div class="entry-summary">
-                                                {{ entry.summary|safe }}
-                                            </div>
-                                            <a href="{{ entry.link }}" class="btn btn-primary">Read more</a>
-                                        </div>
-                                    </div>
+    <table class="main-table" role="presentation" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td align="center" valign="top">
+                <div class="email-container">
+                    <h1>RSS Feeds</h1>
+                    {% for feed in feeds %}
+                    {% if feed.entries %}
+                    <div class="feed-section">
+                        <input type="checkbox" id="toggle-{{ feed.id }}" class="toggle-input" checked>
+                        <label class="accordion-header" for="toggle-{{ feed.id }}">
+                            <h2>{{ feed.name }}</h2>
+                        </label>
+                        <div class="accordion-content">
+                            {% for entry in feed.entries %}
+                            <div class="entry">
+                                <h3>{{ entry.title }}</h3>
+                                <div class="entry-meta">
+                                    📅 {{ entry.published }} | 
+                                    👤 {{ entry.author }} |
+                                    🏷️ {% for tag in entry.tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}
                                 </div>
+                                <div class="entry-summary">
+                                    {{ entry.summary|safe }}
+                                </div>
+                                <a href="{{ entry.link }}" class="button">Read more</a>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
                     </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
