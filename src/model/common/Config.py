@@ -2,7 +2,7 @@ from configparser import ConfigParser, NoSectionError, NoOptionError
 
 from src.model.exception.ModelException import ModelException
 
-DEFAULT_FILE = './src/config/configdev.ini'
+DEFAULT_FILE = './src/config/config.ini'
 
 class Config():
 
