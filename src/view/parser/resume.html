@@ -113,7 +113,7 @@
         }
 
         .toggle-input:checked ~ .accordion-content {
-            max-height: 2000px;
+            max-height: 9999px; /* Valor muy alto para asegurar que todo el contenido sea visible */
         }
 
         /* Typography */
@@ -158,6 +158,12 @@
             border-collapse: collapse;
         }
 
+        /* Ensure content is visible */
+        .entry-summary {
+            width: 100%;
+            overflow: visible;
+        }
+
         /* Mobile responsiveness */
         @media screen and (max-width: 600px) {
             .email-container,
@@ -183,6 +189,10 @@
 
             .accordion-header {
                 padding: 12px 35px 12px 12px !important;
+            }
+
+            .toggle-input:checked ~ .accordion-content {
+                max-height: none; /* Eliminar límite de altura en móviles */
             }
         }
     </style>
